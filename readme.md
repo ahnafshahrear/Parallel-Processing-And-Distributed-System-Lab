@@ -4,11 +4,18 @@
 - **Code:** `CSE4112`
 
 
-### Installation Guide (MPI)
+### Installation of MPI in Visual Studio Code
 - **To install MPI, see this [video](https://www.youtube.com/watch?v=bkfCrj-rBjU) & follow every step carefully. If you face the issue "sal.h dependency not found" or something like that, uninstall the MinGW compiler & follow this [video](https://www.youtube.com/watch?v=_-O94qsnOLk)**
 
 
-### Installation of MPI Through "Windows Subsystem for Linux"
+### Run Command on Visual Studio Code
+- **To run a C Program, go to `Terminal` > `Run Build Task...` in the VS Code & then run the following command**
+<pre>
+<b>mpiexec -n number_of_processors file_name_without_extension</b>
+</pre>
+
+
+### Installation of MPI through Windows Subsystem for Linux
 - **Go to `Turn Windows features on or off` & turn on the `Windows Subsystem for Linux`**
 - **Now go to windows Terminal & run the 1st command (if doesn't work run the 2nd command)**
 <pre>
@@ -22,18 +29,24 @@
 <b>wsl --set-default-version 1</b>
 </pre>
 - **Now go to `Ubunto` & Setup with Username & Password**
-- **Then run the following commands**
+- **Then run the following commands on `Ubunto`**
 <pre>
 <b>sudo apt-get update</b>
 <b>sudo apt-get install mpich</b>
 </pre>
-
-
-### Run Command 
-- **First go to `Terminal` > `Run Build Task...` in the VS Code & then run the following command**
+- **Once after every session you have to mount your drive using the command**
 <pre>
-<b>mpiexec -n number_of_processors file_name_without_extension</b>
+<b>cd /mnt/(C/D/E/F)</b>
 </pre>
+
+
+### Run Command on Ubuntu
+- **To run a C Program, go to `Ubuntu` & then run the following commands**
+<pre>
+<b>mpicc name.c -o name</b>
+<b>mpirun -n number_of_processors ./name</b>  
+</pre>
+
 
 ### Lab Tasks
 - **Write an MPI program to multiply two matrices of size MxN and NxP**
