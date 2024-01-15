@@ -5,6 +5,8 @@
 
 ### Installation Guide (MPI)
 - **To install MPI, see this [video](https://www.youtube.com/watch?v=bkfCrj-rBjU) & follow every step carefully. If you face the issue "sal.h dependency not found" or something like that, uninstall the MinGW compiler & follow this [video](https://www.youtube.com/watch?v=_-O94qsnOLk)**
+### MPI Installation Through "Windows Subsystem for Linux"
+- **Go to `Turn Windows features on or off` & turn on the `Windows Subsystem for Linux`**
 
 
 ### Run Command 
