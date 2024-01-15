@@ -3,10 +3,25 @@
 - **Computer Science & Engineering, University of Rajshahi**
 - **Code:** `CSE4112`
 
+
 ### Installation Guide (MPI)
 - **To install MPI, see this [video](https://www.youtube.com/watch?v=bkfCrj-rBjU) & follow every step carefully. If you face the issue "sal.h dependency not found" or something like that, uninstall the MinGW compiler & follow this [video](https://www.youtube.com/watch?v=_-O94qsnOLk)**
-### MPI Installation Through "Windows Subsystem for Linux"
+
+
+### Installation of MPI Through "Windows Subsystem for Linux"
 - **Go to `Turn Windows features on or off` & turn on the `Windows Subsystem for Linux`**
+- **Now go to windows Terminal & run the 1st command (if doesn't work run the 2nd command)**
+<pre>
+<b>wsl.exe --install</b>
+<b>wsl --install -d Ubuntu-22.04</b>
+</pre>
+- **If any error occurs go to the provided link & download the latest package from `Step 4 - Download the Linux kernel update package`**
+- **If further error occurs with error code `0x80370102` go to Terminal & run the following command**
+<pre>
+<b>wsl --update</b>
+<b>wsl --set-default-version 1</b>
+</pre>
+- **Now go to `Ubunto` & Setup with Username & Password**
 
 
 ### Run Command 
