@@ -4,7 +4,7 @@
 - **Code:** `CSE4112`
 
 
-### Installation of MPI in Visual Studio Code
+## Installation of MPI in Visual Studio Code
 - **To install MPI, see this [video](https://www.youtube.com/watch?v=bkfCrj-rBjU) & follow every step carefully. If you face the issue "sal.h dependency not found" or something like that, uninstall the MinGW compiler & follow this [video](https://www.youtube.com/watch?v=_-O94qsnOLk)**
 
 
@@ -15,7 +15,7 @@
 </pre>
 
 
-### Installation of MPI through Windows Subsystem for Linux
+## Installation of MPI in Windows Subsystem for Linux
 - **Go to `Turn Windows features on or off` & turn on the `Windows Subsystem for Linux`**
 - **Now go to windows Terminal & run the 1st command (if doesn't work run the 2nd command)**
 <pre>
@@ -48,7 +48,7 @@
 </pre>
 
 
-### Lab Tasks
+## Lab Tasks
 - **Write an MPI program to multiply two matrices of size MxN and NxP**
 - **Write an MPI program to simulate a simple calculator. Perform each operation using a different process in parallel ✓**
 - **Write an MPI program to count the words in a file & sort it in descending order of frequency of words that is, the highest occurring word must come first & the least occurring word must come last**
@@ -58,7 +58,7 @@
 - **Write a Cuda program to find out the maximum common subsequence**
 - **Given a paragraph & a pattern like %x%. Now write a Cuda program to find out the line number where %x% this pattern exists in the given paragraph**
 
-### Basic Instructions of MPI
+## Basic Instructions of MPI
 - **To configure the program to run an MPI, initialize all the data structures -**
 <pre>
 <b>int MPI_Init(int *argc, char ***argv)</b>
