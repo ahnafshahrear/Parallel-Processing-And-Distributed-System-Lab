@@ -22,6 +22,11 @@
 <b>wsl --set-default-version 1</b>
 </pre>
 - **Now go to `Ubunto` & Setup with Username & Password**
+- **Then run the following commands**
+<pre>
+<b>sudo apt-get update</b>
+<b>sudo apt-get install mpich</b>
+</pre>
 
 
 ### Run Command 
