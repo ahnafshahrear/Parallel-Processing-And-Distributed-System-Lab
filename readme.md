@@ -46,6 +46,11 @@
 <b>mpicc name.c -o name</b>
 <b>mpirun -n number_of_processors ./name</b>  
 </pre>
+- **To run a C++ Program, go to `Ubuntu` & then run the following commands**
+<pre>
+<b>mpic++ name.c -o name</b>
+<b>mpirun -n number_of_processors ./name</b>  
+</pre>
 
 
 ## Lab Tasks
