@@ -101,8 +101,9 @@ int main(int argc, char** argv)
         }
     }
 
-    double end_time = MPI_Wtime();
-    cout << "Process " << world_rank << " took " << end_time - start_time << " seconds\n";
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    printf("Process %d took %f seconds.\n", world_rank, MPI_Wtime() - start_time);
 
     MPI_Finalize();
 
