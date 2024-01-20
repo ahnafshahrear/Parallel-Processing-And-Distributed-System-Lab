@@ -4,36 +4,7 @@
 using namespace std;
 
 //... To compile: mpic++ matrix-multiplication.cpp -o matrix-multiplication
-//... To run: mpirun -n 4 ./matrix-multiplication  
-
-void generate_matrix(int row, int column, vector<vector<int>> &x)
-{
-    x.resize(row, vector<int>(column));
-    for (int r = 0; r < row; r++)
-    {
-        for (int c = 0; c < column; c++)
-        {
-            x[r][c] = rand() % 10;
-        }
-    }
-}
-
-void multiply_matrix(vector<vector<int>> &x, vector<vector<int>> &y, vector<vector<int>> &z)
-{
-    int m = x.size(), n = x[0].size(), p = y[0].size();
-    z.resize(m, vector<int>(p, 0));
-
-    for (int r = 0; r < m; r++)
-    {
-        for (int c = 0; c < p; c++)
-        {
-            for (int k = 0; k < n; k++)
-            {
-                z[r][c] += x[r][k] * y[k][c];
-            }
-        }
-    }
-}
+//... To run: mpirun -n 3 ./matrix-multiplication  
 
 int main(int argc, char** argv)
 {
@@ -43,43 +14,95 @@ int main(int argc, char** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
+    double start_time = MPI_Wtime();
+
     srand(time(nullptr));
 
-    const int K = 9; 
-    const int M = 4;  
-    const int N = 3; 
-    const int P = 5;
+    const int K = 9; //... Total Number of matrix
+    const int M = 4; //... Row of 1st matrix
+    const int N = 3; //... Column of 1st matrix & Row of 2nd matrix
+    const int P = 5; //... Column of 2nd matrix
 
-    vector<vector<int>> x, y, z;
-
-    double start_time, end_time;
-
-    for (int k = 0; k < K; k++)
+    if (K % world_size != 0)
     {
-        if (k % world_size == world_rank)
+        cout << "Number of matrices should be divisible by number of Process\n";
+        MPI_Finalize();
+        return 0;
+    }
+
+    int M1[K][M][N]; //... Array of 1st matrix
+    int M2[K][N][P]; //... Array of 2nd matrix    
+    int M3[K][M][P]; //... Array of ans matrix   
+
+    if (!world_rank) //... Rank 0 process will create the matrices
+    {
+        for (int k = 0; k < K; k++)
         {
-            start_time = MPI_Wtime();
-            generate_matrix(M, N, x);
-            generate_matrix(N, P, y);
-            multiply_matrix(x, y, z);
+            for (int r = 0; r < M; r++)
+            {
+                for (int c = 0; c < N; c++)
+                {
+                    M1[k][r][c] = rand() % 10;
+                }
+            }
+            for (int r = 0; r < N; r++)
+            {
+                for (int c = 0; c < P; c++)
+                {
+                    M2[k][r][c] = rand() % 10;
+                }
+            }
+        }
+    }
 
-            MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
 
-            cout << "Process " << world_rank << " & Result:" << "\n";
+    int size_per_process = K / world_size;
+    int m1[size_per_process][M][N]; //... Local array of 1st matrix
+    int m2[size_per_process][N][P]; //... Local array of 2nd matrix
+    int m3[size_per_process][M][P]; //... Local array of ans matrix
+
+    MPI_Scatter(M1, size_per_process * M * N, MPI_INT, m1, size_per_process * M * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(M2, size_per_process * N * P, MPI_INT, m2, size_per_process * N * P, MPI_INT, 0, MPI_COMM_WORLD);
+
+    //... Performing matrix multiplication 
+    for (int n = 0; n < size_per_process; n++)
+    {
+        for (int r = 0; r < M; r++)
+        {
+            for (int c = 0; c < P; c++)
+            {
+                m3[n][r][c] = 0;
+                for (int k = 0; k < N; k++)
+                {
+                    m3[n][r][c] += m1[n][r][k] * m2[n][k][c];
+                }
+            }
+        }
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    MPI_Gather(m3, size_per_process * M * P, MPI_INT, M3, size_per_process * M * P, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (!world_rank) //... Rank 0 process will output the result
+    {
+        for (int k = 0; k < K; k++)
+        {
+            cout << "Result " << k << ":\n";
             for (int r = 0; r < M; r++)
             {
                 for (int c = 0; c < P; c++)
                 {
-                    cout << z[r][c] << " ";
+                    cout << M3[k][r][c] << " ";
                 }
                 cout << "\n";
             }
-
-            end_time = MPI_Wtime();
-            cout << "Process " << world_rank << " took " << end_time - start_time << " seconds\n";
         }
-        else MPI_Barrier(MPI_COMM_WORLD);
     }
+
+    double end_time = MPI_Wtime();
+    cout << "Process " << world_rank << " took " << end_time - start_time << " seconds\n";
 
     MPI_Finalize();
 
