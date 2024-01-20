@@ -4,7 +4,7 @@
 using namespace std;
 
 //... To compile: mpic++ phonebook-search.cpp -o phonebook-search
-//... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook1.txt
+//... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook2.txt
 
 void send_int(int number, int receiver)
 {
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
             send_string(phone_numbers_string, i);
         }
 
-        string name = "Henry";
+        string name = "Sophie";
         for (int i = 0; i < segment; i++)
         {
             check(names[i], phone_numbers[i], name, world_rank);
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
         string phone_numbers_string = receive_string(0);
         vector<string> phone_numbers = string_to_vector(phone_numbers_string);
 
-        string name = "Jackson";
+        string name = "Sophie";
         for (int i = 0; i < names.size(); i++)
         {
             check(names[i], phone_numbers[i], name, world_rank);
