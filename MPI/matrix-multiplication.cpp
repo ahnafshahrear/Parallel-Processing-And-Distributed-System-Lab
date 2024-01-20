@@ -30,26 +30,28 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    int M1[K][M][N]; //... Array of 1st matrix
-    int M2[K][N][P]; //... Array of 2nd matrix    
-    int M3[K][M][P]; //... Array of ans matrix   
+    int X[K][M][N]; //... Array of 1st matrix
+    int Y[K][N][P]; //... Array of 2nd matrix    
+    int Z[K][M][P]; //... Array of ans matrix   
 
     if (!world_rank) //... Rank 0 process will create the matrices
     {
         for (int k = 0; k < K; k++)
         {
+            //... Generating 1st matrix with random numbers
             for (int r = 0; r < M; r++)
             {
                 for (int c = 0; c < N; c++)
                 {
-                    M1[k][r][c] = rand() % 10;
+                    X[k][r][c] = rand() % 100;
                 }
             }
+            //... Generating 2nd matrix with random numbers
             for (int r = 0; r < N; r++)
             {
                 for (int c = 0; c < P; c++)
                 {
-                    M2[k][r][c] = rand() % 10;
+                    Y[k][r][c] = rand() % 100;
                 }
             }
         }
@@ -58,24 +60,24 @@ int main(int argc, char** argv)
     MPI_Barrier(MPI_COMM_WORLD);
 
     int size_per_process = K / world_size;
-    int m1[size_per_process][M][N]; //... Local array of 1st matrix
-    int m2[size_per_process][N][P]; //... Local array of 2nd matrix
-    int m3[size_per_process][M][P]; //... Local array of ans matrix
+    int x[size_per_process][M][N]; //... Local array of 1st matrix
+    int y[size_per_process][N][P]; //... Local array of 2nd matrix
+    int z[size_per_process][M][P]; //... Local array of ans matrix
 
-    MPI_Scatter(M1, size_per_process * M * N, MPI_INT, m1, size_per_process * M * N, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Scatter(M2, size_per_process * N * P, MPI_INT, m2, size_per_process * N * P, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(X, size_per_process * M * N, MPI_INT, x, size_per_process * M * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(Y, size_per_process * N * P, MPI_INT, y, size_per_process * N * P, MPI_INT, 0, MPI_COMM_WORLD);
 
-    //... Performing matrix multiplication 
+    //... Performing matrix multiplication by each process
     for (int n = 0; n < size_per_process; n++)
     {
         for (int r = 0; r < M; r++)
         {
             for (int c = 0; c < P; c++)
             {
-                m3[n][r][c] = 0;
+                z[n][r][c] = 0;
                 for (int k = 0; k < N; k++)
                 {
-                    m3[n][r][c] += m1[n][r][k] * m2[n][k][c];
+                    z[n][r][c] += x[n][r][k] * y[n][k][c];
                 }
             }
         }
@@ -83,27 +85,30 @@ int main(int argc, char** argv)
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    MPI_Gather(m3, size_per_process * M * P, MPI_INT, M3, size_per_process * M * P, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(z, size_per_process * M * P, MPI_INT, Z, size_per_process * M * P, MPI_INT, 0, MPI_COMM_WORLD);
 
-    if (!world_rank) //... Rank 0 process will output the result
+    if (!world_rank) //... Rank 0 process will output the results
     {
         for (int k = 0; k < K; k++)
         {
-            cout << "Result " << k << ":\n";
+            cout << "Result of the matrix multiplication " << k + 1 << ":\n\n";
             for (int r = 0; r < M; r++)
             {
                 for (int c = 0; c < P; c++)
                 {
-                    cout << M3[k][r][c] << " ";
+                    cout << Z[k][r][c] << " ";
                 }
                 cout << "\n";
             }
+            cout << "\n";
         }
     }
 
+    double finish_time = MPI_Wtime();
+
     MPI_Barrier(MPI_COMM_WORLD);
 
-    printf("Process %d took %f seconds.\n", world_rank, MPI_Wtime() - start_time);
+    printf("Process %d took %f seconds.\n", world_rank, finish_time - start_time);
 
     MPI_Finalize();
 
