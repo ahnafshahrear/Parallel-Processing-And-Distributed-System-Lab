@@ -6,28 +6,17 @@ using namespace std;
 //... To compile: mpic++ phonebook-search.cpp -o phonebook-search
 //... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook2.txt
 
-void send_int(int number, int receiver)
-{
-    MPI_Send(&number, 1, MPI_INT, receiver, 1, MPI_COMM_WORLD);
-}
-
-int receive_int(int sender)
-{
-    int number;
-    MPI_Recv(&number, 1, MPI_INT, sender, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    return number;
-}
-
 void send_string(string text, int receiver)
 {
-    int length = (int)text.size() + 1;
-    send_int(length, receiver);
+    int length = text.size() + 1;
+    MPI_Send(&length, 1, MPI_INT, receiver, 1, MPI_COMM_WORLD);
     MPI_Send(&text[0], length, MPI_CHAR, receiver, 1, MPI_COMM_WORLD);
 }
 
 string receive_string(int sender)
 {
-    int length = receive_int(sender);
+    int length;
+    MPI_Recv(&length, 1, MPI_INT, sender, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     char *text = new char[length];
     MPI_Recv(text, length, MPI_CHAR, sender, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     return string(text);
