@@ -6,14 +6,14 @@ using namespace std;
 //... To compile: mpic++ phonebook-search.cpp -o phonebook-search
 //... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook2.txt
 
-void send_string(string text, int receiver)
+void send_string(string text, int receiver) 
 {
     int length = text.size() + 1;
     MPI_Send(&length, 1, MPI_INT, receiver, 1, MPI_COMM_WORLD);
     MPI_Send(&text[0], length, MPI_CHAR, receiver, 1, MPI_COMM_WORLD);
 }
 
-string receive_string(int sender)
+string receive_string(int sender) 
 {
     int length;
     MPI_Recv(&length, 1, MPI_INT, sender, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -95,10 +95,10 @@ int main(int argc, char** argv)
         for (int i = 1; i < world_size; i++)
         {
             int start = i * segment, end = start + segment;
-            string names_string = vector_to_string(names, start, end);
-            send_string(names_string, i);
-            string phone_numbers_string = vector_to_string(phone_numbers, start, end);
-            send_string(phone_numbers_string, i);
+            string names_to_send = vector_to_string(names, start, end);
+            send_string(names_to_send, i);
+            string phone_numbers_to_send = vector_to_string(phone_numbers, start, end);
+            send_string(phone_numbers_to_send, i);
         }
 
         string name = "Sophie";
@@ -109,10 +109,10 @@ int main(int argc, char** argv)
     }
     else 
     {
-        string names_string = receive_string(0);
-        vector<string> names = string_to_vector(names_string);
-        string phone_numbers_string = receive_string(0);
-        vector<string> phone_numbers = string_to_vector(phone_numbers_string);
+        string received_names = receive_string(0);
+        vector<string> names = string_to_vector(received_names);
+        string received_phone_numbers = receive_string(0);
+        vector<string> phone_numbers = string_to_vector(received_phone_numbers);
 
         string name = "Sophie";
         for (int i = 0; i < names.size(); i++)
@@ -121,9 +121,11 @@ int main(int argc, char** argv)
         }
     }
 
+    double finish_time = MPI_Wtime();
+
     MPI_Barrier(MPI_COMM_WORLD);
 
-    printf("Process %d took %f seconds.\n", world_rank, MPI_Wtime() - start_time);
+    printf("Process %d took %f seconds.\n", world_rank, finish_time - start_time);
 
     MPI_Finalize();
 
