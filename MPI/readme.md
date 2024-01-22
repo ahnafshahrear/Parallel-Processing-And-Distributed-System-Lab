@@ -17,3 +17,9 @@
 </pre>
 - **To send information -**
 <pre>
+<b>int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm)</b>
+</pre>
+- **To receive information -**
+<pre>
+<b>int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)</b>
+</pre>
