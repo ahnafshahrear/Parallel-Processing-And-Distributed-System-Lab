@@ -63,9 +63,3 @@
 - **Write a Cuda program for matrix multiplication**
 - **Write a Cuda program to find out the maximum common subsequence**
 - **Given a paragraph & a pattern like %x%. Now write a Cuda program to find out the line number where %x% this pattern exists in the given paragraph**
-<b>int MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm)</b>
-</pre>
-- **To receive information -**
-<pre>
-<b>int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)</b>
-</pre>
