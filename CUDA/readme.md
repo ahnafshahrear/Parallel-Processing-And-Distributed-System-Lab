@@ -7,5 +7,5 @@
 - **Code format**
 <pre>
 <b>%%cu</b>
-<b>CUDA code starts here</b>
+<b>Code starts here...</b>
 </pre>
