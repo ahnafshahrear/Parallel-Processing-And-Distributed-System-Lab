@@ -52,6 +52,12 @@ int main()
 
     int size = phonebook.size();
 
+    cudaEvent_t start; //... Start time
+    cudaEventCreate(&start); 
+
+    cudaEvent_t end; //... End time
+    cudaEventCreate(&end);
+
     Contact* device_phonebook;
     cudaMalloc((void **)&device_phonebook, sizeof(Contact) * size);
 
@@ -60,19 +66,23 @@ int main()
     string search_name = "Sophie";
     int name_length = search_name.size() + 1;
     char* device_search_name;
-    cudaMalloc((void**)&device_search_name, name_length);
+    cudaMalloc((void **)&device_search_name, name_length);
 
     cudaMemcpy(device_search_name, search_name.c_str(), name_length, cudaMemcpyHostToDevice);
 
     int blockSize = 256;
     int gridSize = (size + blockSize - 1) / blockSize;
 
+    cudaEventRecord(start);
+
     searchPhonebook<<<gridSize, blockSize>>>(device_phonebook, size, device_search_name, name_length);
 
-    cudaDeviceSynchronize();
+    cudaEventRecord(end);
+    cudaEventSynchronize(end);
 
-    cudaFree(device_phonebook);
-    cudaFree(device_search_name);
+    float time_taken = 0;
+    cudaEventElapsedTime(&time_taken, start, end);
+    cout << "\nTime taken to execute: " << time_taken << " ms\n\n";
     
     return 0;
 }
