@@ -6,14 +6,14 @@ using namespace std;
 //... To compile: mpic++ phonebook-search.cpp -o phonebook-search
 //... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook2.txt
 
-void send_string(string text, int receiver) 
+void sendString(string text, int receiver)
 {
     int length = text.size() + 1;
     MPI_Send(&length, 1, MPI_INT, receiver, 1, MPI_COMM_WORLD);
     MPI_Send(&text[0], length, MPI_CHAR, receiver, 1, MPI_COMM_WORLD);
 }
 
-string receive_string(int sender) 
+string receiveString(int sender)
 {
     int length;
     MPI_Recv(&length, 1, MPI_INT, sender, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -22,7 +22,7 @@ string receive_string(int sender)
     return string(text);
 }
 
-string vector_to_string(vector<string> &words, int start, int end)
+string vectorToString(vector<string> &words, int start, int end)
 {
     string text = "";
     for (int i = start; i < min((int)words.size(), end); i++)
@@ -32,7 +32,7 @@ string vector_to_string(vector<string> &words, int start, int end)
     return text;
 }
 
-vector<string> string_to_vector(string text)
+vector<string> stringToVector(string text)
 {
     stringstream x(text);
     vector<string> words;
@@ -46,21 +46,13 @@ vector<string> string_to_vector(string text)
 
 void check(string name, string phone, string search_name, int rank)
 {
-    if (name.size() != search_name.size()) 
+    if (name == search_name) 
     {
-        return;
+        printf("%s: %s (found by process %d.)\n", name.c_str(), phone.c_str(), rank);
     }
-    for (int i = 0; i < search_name.size(); i++)
-    {
-        if (name[i] != search_name[i])
-        {
-            return;
-        }
-    }
-    printf("%s %s found by process %d.\n", name.c_str(), phone.c_str(), rank);
 }
 
-void read_phonebook(vector<string> &file_names, vector<string> &names, vector<string> &phone_numbers)
+void inputPhonebook(vector<string> &file_names, vector<string> &names, vector<string> &phone_numbers)
 {
     for (auto file_name: file_names)
     {
@@ -89,32 +81,34 @@ int main(int argc, char** argv)
     {
         vector<string> names, phone_numbers;
         vector<string> file_names(argv + 1, argv + argc);
-        read_phonebook(file_names, names, phone_numbers);
-        int segment = names.size() / world_size + 1;
+        inputPhonebook(file_names, names, phone_numbers);
+        int process_phonebook_size = names.size() / world_size + 1;
 
-        for (int i = 1; i < world_size; i++)
+        for (int n = 1; n < world_size; n++)
         {
-            int start = i * segment, end = start + segment;
-            string names_to_send = vector_to_string(names, start, end);
-            send_string(names_to_send, i);
-            string phone_numbers_to_send = vector_to_string(phone_numbers, start, end);
-            send_string(phone_numbers_to_send, i);
+            int start = n * process_phonebook_size, end = start + process_phonebook_size;
+            string names_to_send = vectorToString(names, start, end);
+            sendString(names_to_send, n);
+            string phone_numbers_to_send = vectorToString(phone_numbers, start, end);
+            sendString(phone_numbers_to_send, n);
         }
 
         string name = "Sophie";
-        for (int i = 0; i < segment; i++)
+
+        for (int i = 0; i < process_phonebook_size; i++)
         {
             check(names[i], phone_numbers[i], name, world_rank);
         }
     }
-    else 
+    else
     {
-        string received_names = receive_string(0);
-        vector<string> names = string_to_vector(received_names);
-        string received_phone_numbers = receive_string(0);
-        vector<string> phone_numbers = string_to_vector(received_phone_numbers);
+        string received_names = receiveString(0);
+        vector<string> names = stringToVector(received_names);
+        string received_phone_numbers = receiveString(0);
+        vector<string> phone_numbers = stringToVector(received_phone_numbers);
 
         string name = "Sophie";
+
         for (int i = 0; i < names.size(); i++)
         {
             check(names[i], phone_numbers[i], name, world_rank);
