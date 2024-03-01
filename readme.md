@@ -1,7 +1,7 @@
 ## Parallel Processing & Distributed System Lab
 - **[Ahnaf Shahrear Khan](https://github.com/ahnafshahrear)**
 - **Computer Science & Engineering, University of Rajshahi**
-- **Code:** `CSE4112`
+- **Code: `CSE-4112`**
 
 
 ## Installation of MPI in Windows Subsystem for Linux
