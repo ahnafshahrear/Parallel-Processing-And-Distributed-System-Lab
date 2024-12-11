@@ -1,4 +1,4 @@
-## How to run CUDA on Google Colab
+# How to run CUDA on Google Colab
 - **To install CUDA plugin**
 <pre>
 <b>!pip install git+https://github.com/andreinechaev/nvcc4jupyter.git</b>
