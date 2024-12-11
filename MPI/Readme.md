@@ -1,4 +1,4 @@
-## Basic Instructions of MPI
+# Basic Instructions of MPI
 - **To configure the program to run an MPI, initialize all the data structures -**
 <pre>
 <b>int MPI_Init(int *argc, char ***argv)</b>
