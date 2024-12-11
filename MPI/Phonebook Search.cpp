@@ -4,7 +4,7 @@
 using namespace std;
 
 //... To compile: mpic++ phonebook-search.cpp -o phonebook-search
-//... To run: mpirun -n 4 ./phonebook-search phonebook1.txt phonebook2.txt
+//... To run: mpirun -n 4 ./phonebook-search Phonebook1.txt Phonebook2.txt
 
 void sendString(string text, int receiver)
 {
