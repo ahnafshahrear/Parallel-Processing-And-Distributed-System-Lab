@@ -60,7 +60,7 @@
 - **Write an MPI program to simulate a simple calculator using a different process in parallel ✓**
 - **Write an MPI program to count the words in a file & sort it in descending order of frequency of words that is, the highest occurring word must come first & the least occurring word must come last**
 - **Write an MPI program using synchronous send. The sender process sends a word to the receiver. The second process receives the word, toggles each letter of the word & sends it back to the first process. Both processes use synchronous send operations ✓**
-- **Write an MPI program to add an array of size N using two processes. Print the result in the root process. Investigate the amount of time taken by each process ✓**
+- **Write an MPI program to add an array of size N using two processes. Print the result in the root process & the amount of time taken by each process ✓**
 - **Write a CUDA program for matrix multiplication ✓**
 - **Given a list of names & phone numbers as a phonebook. Write a CUDA program to search for a name & phone number from a phonebook ✓**
 - **Given a paragraph & a pattern like %x%. Now write a CUDA program to find out the line number where %x% this pattern exists in the given paragraph**
